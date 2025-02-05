@@ -72,7 +72,7 @@ JOIN teamrel ON team.team_id = teamrel.team_id
 JOIN affiliationrel ON teamrel.agent_id = affiliationrel.agent_id 
 JOIN affiliation ON affiliationrel.aff_id = affiliation.aff_id
 WHERE mission.mission_status = 'ongoing'
-GROUP BY affiliation.aff_id
+GROUP BY affiliation.aff_id, affiliation.title
 HAVING COUNT(mission.mission_id) = (
     SELECT MAX(mission_count)
     FROM (
@@ -83,11 +83,9 @@ HAVING COUNT(mission.mission_id) = (
         JOIN affiliationrel ON teamrel.agent_id = affiliationrel.agent_id 
         WHERE mission.mission_status = 'ongoing'
         GROUP BY affiliationrel.aff_id
-    ) 
+    ) AS max_missions
 )
-
 UNION
-
 SELECT affiliation.aff_id, affiliation.title, COUNT(mission.mission_id) AS active_missions
 FROM mission
 JOIN team ON mission.team_id = team.team_id 
@@ -95,19 +93,20 @@ JOIN teamrel ON team.team_id = teamrel.team_id
 JOIN affiliationrel ON teamrel.agent_id = affiliationrel.agent_id 
 JOIN affiliation ON affiliationrel.aff_id = affiliation.aff_id
 WHERE mission.mission_status = 'ongoing'
-GROUP BY affiliation.aff_id
+GROUP BY affiliation.aff_id, affiliation.title
 HAVING COUNT(mission.mission_id) = (
-    SELECT MIN(mission_count2)
+    SELECT MIN(mission_count)
     FROM (
-        SELECT affiliationrel.aff_id, COUNT(mission.mission_id) AS mission_count2
+        SELECT affiliationrel.aff_id, COUNT(mission.mission_id) AS mission_count
         FROM mission
         JOIN team ON mission.team_id = team.team_id 
         JOIN teamrel ON team.team_id = teamrel.team_id 
         JOIN affiliationrel ON teamrel.agent_id = affiliationrel.agent_id 
         WHERE mission.mission_status = 'ongoing'
         GROUP BY affiliationrel.aff_id
-    ) 
-)
+    ) AS min_missions
+);
+
 	"""
 
 def query6():
