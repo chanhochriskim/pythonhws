@@ -1,0 +1,29 @@
+
+\begin{questions}
+\question (6 pts) Retrieve all agents who have a “strong” affiliation relationship. For each of those agents, display the name of the affiliation they belong to. Specifically, list the agent’s first name, last name, affiliation title, and the affiliation\_strength value. Use natural join (do not use theta join and cross product). 
+
+\textbf{Answer:} \\
+% Your Answer Here
+$a \leftarrow \text{agent} \bowtie \text{affiliationrel}$\\
+$b \leftarrow a \bowtie \text{affiliation}$\\
+$c \leftarrow \sigma_{\text{affiliation\_strength = 'strong'}}(b)$\\
+$d \leftarrow \pi_{\text{c.first, c.last, c.title, c.affiliation\_strength}}(c)$\\
+$d$
+
+
+% End of your Answer
+\vspace{15 mm}
+	
+\question (6 pts) For agents with a salary greater than 80000, list each agent’s first name, last name, and the skills the agent has. Use cross product (do not use theta join and natural join).
+
+\textbf{Answer:} \\ 
+% Your Answer Here
+$a \leftarrow \text{agent} \times \text{skillrel}$\\
+$b \leftarrow \sigma_{\text{a.agent_agent\_id} = \text{a.skillrel_agent\_id}}(a)$\\
+$c \leftarrow b \times \text{skill}$\\
+$d \leftarrow \sigma_{\text{c.b_skill_id} = \text{c.skill_skill_id}}(c)$\\
+$e \leftarrow \sigma_{\text{d.salary} > 80000}(d)$\\
+$f \leftarrow \pi_{\text{e.first, e.last, e.skill}}(e)$\\
+$f$
+
+# file included here later.
