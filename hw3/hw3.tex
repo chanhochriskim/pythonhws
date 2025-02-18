@@ -1,3 +1,9 @@
+Here is some sample Latex code for you in order to get familiar with the Autograding Syntax. Below is the template on how you should write your answers in Latex.\\
+$a \leftarrow \text{place p} \times \text{neighbourhood n}$\\
+$b \leftarrow \sigma_{\text{a.n\_neighbourhood\_id = a.p\_neighbourhood\_id}}(a)$\\
+$c \leftarrow \sigma_{\text{b.n\_name = `Harlem'}}(b)$\\
+$d \leftarrow \pi_{\text{c.id, c.p\_name}}(c)$\\
+$d$
 
 \begin{questions}
 \question (6 pts) Retrieve all agents who have a “strong” affiliation relationship. For each of those agents, display the name of the affiliation they belong to. Specifically, list the agent’s first name, last name, affiliation title, and the affiliation\_strength value. Use natural join (do not use theta join and cross product). 
@@ -26,4 +32,61 @@ $e \leftarrow \sigma_{\text{d.salary} > 80000}(d)$\\
 $f \leftarrow \pi_{\text{e.first, e.last, e.skill}}(e)$\\
 $f$
 
-# file included here later.
+
+% End of your Answer
+\vspace{15 mm}
+
+\question (6 pts) Find the teams associated with failed missions where the mission's access\_id is 1. List the mission name and the team name. Use Theta join for this question. Natural join and cross product are not allowed for this question. 
+
+\textbf{Answer:} \\
+% Your Answer Here
+$a \leftarrow \text{mission} \bowtie_{\text{mission.team\_id = team.team\_id}} \text{team}$\\
+$b \leftarrow \sigma_{\text{a.mission\_status = 'failed'} \land \text{a.access\_id = 1}}(a)$\\
+$c \leftarrow \pi_{\text{b.mission\_name, b.team\_name}}(b)$\\
+$c$
+
+% End of your Answer
+\vspace{15 mm}
+
+\question (6 pts) Find all agent\_ids that appear with an affiliation\_strength = `weak' or with affiliation\_strength = `medium' in the affiliationrel table.  Use set operators (intersection, except, or union).
+
+\textbf{Answer:} \\
+% Your Answer Here
+$a \leftarrow \text{affiliationrel} \times \text{agent}$\\
+$b \leftarrow \sigma_{\text{a.agent_agent\_id} = \text{a.affiliationrel_agent\_id}}(a)$\\
+$c \leftarrow \pi_{\text{b.agent_agent\_id}} (\sigma_{\text{b.affiliation\_strength = 'weak'}}(b))$\\
+$d \leftarrow \text{affiliationrel} \times \text{agent}$\\
+$e \leftarrow \sigma_{\text{d.agent_agent\_id} = \text{d.affiliationrel_agent\_id}}(d)$\\
+$f \leftarrow \pi_{\text{e.agent_agent\_id}} (\sigma_{\text{e.affiliation\_strength = 'medium'}}(e))$\\
+$g \leftarrow c \cup f$\\
+$g$
+
+
+% End of your Answer
+\vspace{15 mm}
+
+\question (8 pts) For agents located in `Italy', find the agents who have the `Firearms' skill but do not have the `Sniper' skill. List the agent\_id, last name, and all of their skills (the firearms skill and other skills they have as well). Use set operators (intersection, except, or union)
+
+\textbf{Answer:} \\
+% Your Answer Here
+$a \leftarrow \sigma_{\text{agent.country = 'Italy'}} (\text{agent})$\\
+$b \leftarrow a \bowtie_{\text{a.agent\_id} = \text{skillrel.agent\_id}} \text{skillrel}$\\
+$c \leftarrow b \bowtie_{\text{b.skill\_id} = \text{skill.skill\_id}} \text{skill}$\\
+$d \leftarrow \pi_{\text{c.a_agent\_id}} (\sigma_{\text{c.skill = 'Firearms'}}(c))$\\
+$e \leftarrow \pi_{\text{c.a_agent\_id, c.last, c.skill}} (c \bowtie d)$\\
+$f \leftarrow \pi_{\text{c.a_agent\_id, c.last, c.skill}} (\sigma_{\text{c.skill = 'Sniper'}}(c))$\\
+$g \leftarrow e - f$\\
+$g$
+
+
+% End of your Answer
+\vspace{15 mm}
+
+\question (6 pts) For all agents, list the agent\_id, first and last name, affiliation\_strength and the corresponding affiliation title. You also need to list agents that do not have any affiliation.
+
+\textbf{Answer:}  \\
+% Your Answer Here
+$a \leftarrow \text{affiliationrel} \leftouterjoin_{\text{affiliationrel.aff_id = affiliation.aff_id}} \text{affiliation}$\\
+$b \leftarrow \text{agent} \leftouterjoin_{\text{agent.agent_id = a.agent_id}}(a)$\\
+$c \leftarrow \pi_{\text{b.agent_agent_id, b.first, b.last, b.affiliation_strength, b.title}}(b)$\\
+$c$
