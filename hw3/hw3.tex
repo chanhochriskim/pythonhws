@@ -90,3 +90,51 @@ $a \leftarrow \text{affiliationrel} \leftouterjoin_{\text{affiliationrel.aff_id 
 $b \leftarrow \text{agent} \leftouterjoin_{\text{agent.agent_id = a.agent_id}}(a)$\\
 $c \leftarrow \pi_{\text{b.agent_agent_id, b.first, b.last, b.affiliation_strength, b.title}}(b)$\\
 $c$
+
+% End of your Answer
+\vspace{15 mm}
+
+\question (8 pts) List the agent\_id, first and last name, country, and salary of the agents who have the highest salary in each country. 
+Remember not to use any aggregate functions. Hint: a self join of the table is needed for this query.
+
+\textbf{Answer:} 
+% Your Answer Here
+$a \leftarrow \pi_{\text{agent1.agent_id, agent1.first, agent1.last, agent1.country, agent1.salary}} (\text{agent agent1} \bowtie_{\text{agent1.country = agent2.country} \land \text{agent2.salary} > \text{agent1.salary}} \text{agent agent2})$\\
+$b \leftarrow \pi_{\text{agent1.agent_id, agent1.first, agent1.last, agent1.country, agent1.salary}} (\text{agent agent1}) - (a)$\\
+$b$
+
+
+
+% End of your Answer
+\vspace{15 mm}
+
+\question (9 pts) Find any pair of different agents a1 and a2 who belong to the same affiliation and have the same clearance\_id. List the agent\_id, name, affiliation, and clearance\_id for both a1 and a2. 
+Use a cross product or a join.
+
+\textbf{Answer:} \\
+% Your Answer Here
+$a \leftarrow \text{agent agent1} \bowtie_{\text{agent1.agent_id = ar1.agent_id}} \text{affiliationrel ar1}$\\
+$b \leftarrow a \bowtie_{\text{a.aff_id = affiliation.aff_id}} \text{affiliation}$\\
+$c \leftarrow b \bowtie_{\text{b.a_aff_id = ar2.aff_id}} \text{affiliationrel ar2}$\\
+$d \leftarrow c \bowtie_{\text{c.agent1_agent_id} < \text{agent2.agent_id} 
+\land \text{c.clearance_id} = \text{agent2.clearance_id} 
+\land \text{c.agent_id} = \text{agent2.agent_id}} \text{agent agent2}
+$\\
+$e \leftarrow \pi_{\text{d.ar1_agent_id, d.c_first, d.c_last, d.agent2_agent_id, d.agent2_first, d.agent2_last, d.title, d.c_clearance_id}}(d)$\\
+$e$
+
+
+% End of your Answer
+\vspace{15 mm}
+
+\question (10 pts) List the agent\_id of agents who speak all languages. One approach for this question uses a set operator.
+
+\textbf{Answer:} \\
+% Your Answer Here
+$a \leftarrow \pi_{\text{lr.agent_id}}(\text{languagerel lr})$\\
+$b \leftarrow \pi_{\text{lr.lang_id}}(\text{languagerel lr})$\\
+$c \leftarrow a \times b$\\
+$d \leftarrow c - \pi_{\text{agent_id, lang_id}}(\text{languagerel})$\\
+$e \leftarrow \pi_{\text{d.agent_id}}(d)$\\
+$f \leftarrow a - e$\\
+$f$
